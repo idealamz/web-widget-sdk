@@ -5,6 +5,6 @@ coverage
 cypress/downloads
 cypress/screenshots
 cypress/videos
-dist
+# dist
 mx-sso-api-proxy-rc.yaml
 node_modules
