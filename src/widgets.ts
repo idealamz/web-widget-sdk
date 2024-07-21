@@ -161,7 +161,7 @@ export abstract class Widget<
     return targetOrigin || "https://widgets.moneydesktop.com"
   }
 
-  private waitForIframe(maxWaitTime = 500, checkInterval = 100): Promise<void> {
+  private waitForIframe(maxWaitTime = 1000, checkInterval = 100): Promise<void> {
     return new Promise((resolve, reject) => {
       let elapsed = 0
 

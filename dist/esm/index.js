@@ -878,7 +878,7 @@ class Widget {
         }
         return targetOrigin || "https://widgets.moneydesktop.com";
     }
-    waitForIframe(maxWaitTime = 500, checkInterval = 100) {
+    waitForIframe(maxWaitTime = 1000, checkInterval = 100) {
         return new Promise((resolve, reject) => {
             let elapsed = 0;
             const checkIframe = () => {
