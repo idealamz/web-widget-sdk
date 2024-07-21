@@ -797,6 +797,15 @@ function dispatchPulseInternalMessage(payload, callbacks) {
     }
 }
 
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 class Widget {
     constructor(options) {
         this.isUnmounting = false;
@@ -870,11 +879,10 @@ class Widget {
         return targetOrigin || "https://widgets.moneydesktop.com";
     }
     waitForIframe(maxWaitTime = 500, checkInterval = 100) {
-        const _this = this;
         return new Promise((resolve, reject) => {
             let elapsed = 0;
             const checkIframe = () => {
-                if (_this.iframe.contentWindow) {
+                if (this.iframe.contentWindow) {
                     resolve();
                 }
                 else if (elapsed > maxWaitTime) {
@@ -904,15 +912,16 @@ class Widget {
         }
     }
     postMessageToWidget(payload) {
-        const _this = this;
-        this.waitForIframe(5000, 50)
-            .then(() => {
-            debugger;
-            _this.iframe.contentWindow.postMessage(JSON.stringify(payload), this.targetOrigin);
-        })
-            .catch(() => {
-            debugger;
-            throw new Error("Unable to postMessage to widget, iframe doesn't exist");
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.waitForIframe(5000, 50);
+                debugger;
+                this.iframe.contentWindow.postMessage(JSON.stringify(payload), this.targetOrigin);
+            }
+            catch (error) {
+                debugger;
+                throw new Error("Unable to postMessage to widget, iframe doesn't exist");
+            }
         });
     }
     setupIframe() {
