@@ -162,13 +162,11 @@ export abstract class Widget<
   }
 
   private waitForIframe(maxWaitTime = 500, checkInterval = 100): Promise<void> {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const _this = this
     return new Promise((resolve, reject) => {
       let elapsed = 0
 
       const checkIframe = () => {
-        if (_this.iframe.contentWindow) {
+        if (this.iframe.contentWindow) {
           resolve()
         } else if (elapsed > maxWaitTime) {
           reject(new Error("iframe.contentWindow is not ready within the specified time"))
@@ -204,20 +202,17 @@ export abstract class Widget<
     }
   }
 
-  private postMessageToWidget<T>(payload: SdkPostMessage<T>) {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const _this = this
-    this.waitForIframe(5000, 50)
-      .then(() => {
-        // waitForIframe ensures that this.iframe.contentWindow is not null.
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        debugger
-        _this.iframe.contentWindow!.postMessage(JSON.stringify(payload), this.targetOrigin)
-      })
-      .catch(() => {
-        debugger
-        throw new Error("Unable to postMessage to widget, iframe doesn't exist")
-      })
+  private async postMessageToWidget<T>(payload: SdkPostMessage<T>) {
+    try {
+      await this.waitForIframe(5000, 50)
+      // waitForIframe ensures that this.iframe.contentWindow is not null.
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      debugger
+      this.iframe.contentWindow!.postMessage(JSON.stringify(payload), this.targetOrigin)
+    } catch (error) {
+      debugger
+      throw new Error("Unable to postMessage to widget, iframe doesn't exist")
+    }
   }
 
   /**
